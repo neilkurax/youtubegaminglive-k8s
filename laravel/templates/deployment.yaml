@@ -1,0 +1,130 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: laravel
+  namespace: youtubegaminglive
+  labels:
+    app: laravel
+spec:
+  replicas: {{ .Values.replicas }}
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: laravel
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  template:
+    metadata:
+      labels:
+        app: laravel
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: laravel
+        image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: 200m
+            memory: 10Mi
+          limits:
+            cpu: 800m
+            memory: 1000Mi
+        livenessProbe:
+          exec:
+            command: [ "php-fpm-healthcheck" ]
+          initialDelaySeconds: 0
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command: [ "php-fpm-healthcheck" ]
+          initialDelaySeconds: 1
+          periodSeconds: 5
+        env:
+        - name: APP_NAME
+          value: "YoutubeGaming.live"
+        - name: APP_KEY
+          valueFrom:
+            secretKeyRef:
+              name: laravel
+              key: APP_KEY
+        - name: APP_URL
+          value: "https://youtubegaming.live"
+        - name: APP_ENV
+          value: "production"
+        - name: APP_DEBUG
+          value: "false"
+        - name: LOG_CHANNEL
+          value: "stderr"
+        - name: DB_HOST
+          value: "percona-db-pxc.youtubegaminglive.svc.cluster.local"
+        - name: DB_DATABASE
+          value: "laravel"
+        - name: DB_USERNAME
+          value: "laravel"
+        - name: DB_PASSWORD
+          value: "pass"
+        # - name: CACHE_DRIVER
+        #   value: "redis"
+        - name: SESSION_DRIVER
+          value: "redis"
+        - name: SESSION_LIFETIME
+          value: "120000"
+        - name: REDIS_HOST
+          value: "redis.youtubegaminglive.svc.cluster.local"
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: redis
+              key: redis-password
+        - name: REDIS_CACHE_DB
+          value: "0"
+        - name: MAIL_HOST
+          valueFrom:
+            secretKeyRef:
+              name: laravel
+              key: MAILERSEND_HOST
+        - name: MAIL_PORT
+          valueFrom:
+            secretKeyRef:
+              name: laravel
+              key: MAILERSEND_PORT
+        - name: MAIL_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: laravel
+              key: MAILERSEND_USERNAME
+        - name: MAIL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: laravel
+              key: MAILERSEND_PASSWORD
+        - name: MAIL_FROM_ADDRESS
+          value: "noreply@youtubegaming.live"
+        - name: PUSHER_HOST
+          value: "soketi.youtubegaminglive.svc.cluster.local"
+        - name: PUSHER_PORT
+          value: "8084"
+        - name: PUSHER_APP_ID
+          valueFrom:
+            secretKeyRef:
+              name: soketi
+              key: PUSHER_APP_ID
+        - name: PUSHER_APP_KEY
+          valueFrom:
+            secretKeyRef:
+              name: soketi
+              key: PUSHER_APP_KEY
+        - name: PUSHER_APP_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: soketi
+              key: PUSHER_APP_SECRET
+        ports:
+        - name: laravel
+          containerPort: 9000
