@@ -1,0 +1,42 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: soketi
+  namespace: youtubegaminglive
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "60"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "60"
+    nginx.ingress.kubernetes.io/server-snippets: |
+      location / {
+        proxy_read_timeout 60;
+        proxy_connect_timeout 60;
+        proxy_redirect off;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header REMOTE-HOST $remote_addr;
+        proxy_cache_bypass $http_upgrade;
+      }
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - youtubegaming.live
+    secretName: youtubegaming-tls
+  rules:
+    - host: youtubegaming.live
+      http:
+        paths:
+          - pathType: Prefix
+            path: /pusher(/|$)(.*)
+            backend:
+              service:
+                name: soketi
+                port:
+                  number: 8084

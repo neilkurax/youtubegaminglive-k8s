@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: laravel-pipeline
+  namespace: argo-events
+  labels:
+    workflows.argoproj.io/archive-strategy: "false"
+    workflowtemplates.argoproj.io: "laravel-pipeline"
+spec:
+  entrypoint: build
+  arguments:
+    parameters:
+      - name: tag
+        value: "1.0.0"
+  templates:
+  - name: build
+    inputs:
+      parameters:
+        - name: tag
+          value: "{{`{{ workflow.parameters.tag }}`}}"
+    container:
+      image: gcr.io/kaniko-project/executor:latest
+      command: [/kaniko/executor]
+      args:
+      - "--context=git://github.com/AndreiTelteu/YoutubeGamingLive.git"
+      - "--destination=ghcr.io/andreitelteu/youtubegaminglive-laravel:{{`{{ inputs.parameters.tag }}`}}"
+      volumeMounts:
+        - name: kaniko-secret
+          mountPath: /kaniko/.docker
+  volumes:
+    - name: kaniko-secret
+      secret:
+        secretName: regcred
+        items:
+          - key: .dockerconfigjson
+            path: config.json
+  podGC:
+    strategy: OnPodCompletion

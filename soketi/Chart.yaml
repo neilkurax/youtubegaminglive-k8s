@@ -1,0 +1,4 @@
+apiVersion: v1
+description: Pusher JS compatible server made using NodeJS
+name: youtubegaminglive-soketi
+version: "1.0.0"

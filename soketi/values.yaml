@@ -1,0 +1,6 @@
+
+image:
+  name: ghcr.io/andreitelteu/youtubegaminglive-soketi
+  tag: '1650581025'
+
+replicas: 2
