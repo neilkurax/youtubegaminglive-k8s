@@ -8,7 +8,7 @@ spec:
     app: laravel
   type: ClusterIP
   ports:
-  - name: laravel
+  - name: laravel-nginx
     protocol: TCP
-    port: 9000
-    targetPort: 9000
+    port: 80
+    targetPort: 80

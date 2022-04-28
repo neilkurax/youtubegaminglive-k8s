@@ -73,8 +73,10 @@ spec:
           value: "redis"
         - name: SESSION_LIFETIME
           value: "120000"
+        - name: REDIS_CLIENT
+          value: "predis"
         - name: REDIS_HOST
-          value: "redis.youtubegaminglive.svc.cluster.local"
+          value: "redis-headless.youtubegaminglive.svc.cluster.local"
         - name: REDIS_PORT
           value: "6379"
         - name: REDIS_PASSWORD
@@ -126,5 +128,5 @@ spec:
               name: soketi
               key: PUSHER_APP_SECRET
         ports:
-        - name: laravel
-          containerPort: 9000
+        - name: laravel-nginx
+          containerPort: 80
