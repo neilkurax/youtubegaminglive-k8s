@@ -35,10 +35,10 @@ spec:
               spec:
                 workflowTemplateRef:
                   name: laravel-pipeline
-                entrypoint: build
+                entrypoint: release
                 arguments:
                   parameters:
                   - name: tag
                     value: '1.0.0'
-                podGC:
-                  strategy: OnPodCompletion
+                # podGC:
+                #   strategy: OnPodCompletion
