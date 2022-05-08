@@ -24,6 +24,10 @@ kubectl -n youtubegaminglive \
   --from-literal MAILERSEND_PORT=587 \
   --from-literal MAILERSEND_USERNAME="user" \
   --from-literal MAILERSEND_PASSWORD="pass" \
+  --from-literal YOUTUBE_KEY_ID="" \
+  --from-literal YOUTUBE_CLIENT_ID="" \
+  --from-literal YOUTUBE_CLIENT_SECRET="" \
+  --from-literal YOUTUBE_REDIRECT_URI="/youtube/callback" \
   --output yaml | kubeseal -o yaml | tee laravel/templates/secrets.yaml
 ```
 
