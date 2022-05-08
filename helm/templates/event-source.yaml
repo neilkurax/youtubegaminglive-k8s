@@ -33,6 +33,20 @@ spec:
       webhookSecret:
         name: event-youtubegaminglive-laravel-github-secret
         key: secret
+    crawler-webhook:
+      owner: "AndreiTelteu"
+      repository: "youtubegaminglive-crawler"
+      active: true
+      contentType: "json"
+      webhook:
+        port: "12000"
+        endpoint: /crawler/github-webhook
+        method: POST
+      events:
+        - "*"
+      webhookSecret:
+        name: event-youtubegaminglive-crawler-github-secret
+        key: secret
 
 ---
 
@@ -68,4 +82,22 @@ spec:
     metadata:
       creationTimestamp: null
       name: event-youtubegaminglive-laravel-github-secret
+      namespace: argo-events
+
+---
+
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: event-youtubegaminglive-crawler-github-secret
+  namespace: argo-events
+spec:
+  encryptedData:
+    secret: AgCFZR0w390ens/WvRwrUfRonxcciUPieO1TiTiGqEMvPcNJXdKDGMqgPsak+vFogsQ0MkscLgeHOhswdDDyNp1pm0yvgRRwZ1EkZZiqoiCMMNGCLQWqvk5IG3d2mg3UHFuwFksUc9PyLDPDOXceuqWM8CqcxvLAijc114sDWCohJ3lhnfMhqBEGC5Cikizh/sbbV+sGDlxZmX5a0BhzrQoMhNrEa7d/jzSgGFD4p/WJry2WLZZoYWQXyT86nePGwzazdk4Dl1dRriPEVqon/zMMXP+iOdKclsKEXCdBkrtfAKNcxouUt/xkSW8vQidEdijVYuVo1IA2gxDKcKCWEIrxoEBx7E2BHk+aWhcZgQE84tsOlJkYifei1G95uZ7I5I7gUwaCO2ag8K40l4NuFzCFyDpDRaELUjxL+WueFhuQDNsKrZfT3EUP2DGld9XK5M5dAV6iXXCHuF5+p+g746xXB1knxszB/S8q1BdTbNaeRYX5XBBdryhfWVzmcPy6Om6YwSjF3QPCwuwZGFz/c1+Bfja21+8fWB6eQ7Vuu4ydyAOxRySEaLX1v8lIlftJJtIHfb8aw5ufeIuX5/fYoR23uluimfkQg3Rfz2NcsPzPJ7EWboWZO+gorg1w3Vu8aGHY6Ve4jXnNygULg7g3Po/349nfc9F0xgvmKvjBh/uXY0r4l6to2TaA8lF2xmoZjOii8GCVY2wdcs0/b/tIew==
+  template:
+    data: null
+    metadata:
+      creationTimestamp: null
+      name: event-youtubegaminglive-crawler-github-secret
       namespace: argo-events

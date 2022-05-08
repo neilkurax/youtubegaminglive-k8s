@@ -1,0 +1,74 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: crawler-pipeline
+  namespace: argo-events
+  labels:
+    workflows.argoproj.io/archive-strategy: "false"
+    workflowtemplates.argoproj.io: "crawler-pipeline"
+spec:
+  entrypoint: release
+  arguments:
+    parameters:
+      - name: tag
+        value: "1.0.0"
+  templates:
+  - name: release
+    steps:
+    - - name: build
+        template: build
+    - - name: update-tag
+        template: update-tag
+  - name: build
+    inputs:
+      parameters:
+        - name: tag
+          value: "{{`{{ workflow.parameters.tag }}`}}"
+    container:
+      image: gcr.io/kaniko-project/executor:latest
+      command: [/kaniko/executor]
+      args:
+      - "--context=git://github.com/andreitelteu/youtubegaminglive-crawler.git"
+      - "--destination=ghcr.io/andreitelteu/youtubegaminglive-crawler:{{`{{ inputs.parameters.tag }}`}}"
+      volumeMounts:
+        - name: kaniko-secret
+          mountPath: /kaniko/.docker
+  - name: update-tag
+    inputs:
+      parameters:
+        - name: tag
+          value: "{{`{{ workflow.parameters.tag }}`}}"
+    script:
+      image: alpine/git:latest
+      command: [sh]
+      source: |
+        set -e
+        export OWNER="AndreiTelteu"
+        export REPO="youtubegaminglive-k8s"
+        export FILENAME="crawler/values.yaml"
+        git clone https://$(cat /.github/token)@github.com/$OWNER/$REPO.git
+        cd $REPO
+        echo 'BEFORE:'
+        cat $FILENAME
+        echo 'AFTER:'
+        cat $FILENAME | sed -e "s@tag:.*@tag: '{{`{{ inputs.parameters.tag }}`}}'@g" | tee $FILENAME
+        git config user.name "Argo Workflow"
+        git config user.email "argo@workflow.local"
+        git add $FILENAME
+        git commit -m "Update crawler/values.yaml image tag {{`{{ inputs.parameters.tag }}`}}"
+        git push
+      volumeMounts:
+        - name: github-token
+          mountPath: /.github/
+  volumes:
+    - name: kaniko-secret
+      secret:
+        secretName: regcred
+        items:
+          - key: .dockerconfigjson
+            path: config.json
+    - name: github-token
+      secret:
+        secretName: github-token
+  podGC:
+    strategy: OnPodCompletion

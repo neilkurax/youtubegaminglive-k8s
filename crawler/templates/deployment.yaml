@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name:  crawler
+  namespace: youtubegaminglive
+  labels:
+    app: crawler
+spec:
+  replicas: {{ .Values.replicas }}
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: crawler
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: crawler
+    spec:
+      containers:
+      - name: crawler
+        image: "{{ .Values.image.name }}:{{ .Values.image.tag }}"
+        imagePullPolicy: IfNotPresent
+        resources:
+          requests:
+            cpu: 100m
+            memory: 80Mi
+          limits:
+            cpu: 600m
+            memory: 400Mi
+        env:
+        - name: APP_URL
+          value: "http://laravel.youtubegaminglive.svc.cluster.local"
+        - name: DB_HOST
+          value: "percona-db-pxc.youtubegaminglive.svc.cluster.local"
+        - name: DB_PORT
+          value: "3306"
+        - name: DB_DATABASE
+          value: "laravel"
+        - name: DB_USERNAME
+          value: "laravel"
+        - name: DB_PASSWORD
+          value: "pass"
+        - name: INTERNAL_API_SIG
+          valueFrom:
+            secretKeyRef:
+              name: crawler
+              key: INTERNAL_API_SIG
+      restartPolicy: Always

@@ -38,5 +38,15 @@ kubectl -n argo-events \
   create secret generic event-youtubegaminglive-laravel-github-secret \
   --dry-run=client \
   --from-literal secret="random pass" \
-  --output yaml  | kubeseal -o yaml
+  --output yaml | kubeseal -o yaml
+```
+
+Secret for crawler signature:
+
+```bash
+kubectl -n youtubegaminglive \
+  create secret generic crawler \
+  --dry-run=client \
+  --from-literal INTERNAL_API_SIG="random" \
+  --output yaml | kubeseal -o yaml | tee crawler/templates/secrets.yaml
 ```

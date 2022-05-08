@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: youtubegaminglive-crawler
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: youtubegaminglive
+  source:
+    repoURL: https://github.com/AndreiTelteu/youtubegaminglive-k8s.git
+    targetRevision: HEAD
+    path: crawler
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: youtubegaminglive
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
