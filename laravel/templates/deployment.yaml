@@ -106,6 +106,8 @@ spec:
               key: MAILERSEND_PASSWORD
         - name: MAIL_FROM_ADDRESS
           value: "noreply@youtubegaming.live"
+        - name: BROADCAST_DRIVER
+          value: "pusher"
         - name: PUSHER_HOST
           value: "soketi.youtubegaminglive.svc.cluster.local"
         - name: PUSHER_PORT
@@ -145,6 +147,11 @@ spec:
             secretKeyRef:
               name: laravel
               key: YOUTUBE_REDIRECT_URI
+        - name: INTERNAL_API_SIG
+          valueFrom:
+            secretKeyRef:
+              name: crawler
+              key: INTERNAL_API_SIG
         ports:
         - name: laravel-nginx
           containerPort: 80
