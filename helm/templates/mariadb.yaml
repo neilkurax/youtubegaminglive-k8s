@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mariadb
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: youtubegaminglive
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: mariadb
+    targetRevision: 11.0.2
+    helm:
+      values: |
+        nameOverride: "mariadb"
+        fullnameOverride: "mariadb"
+        auth:
+          rootPassword: {{ randAlphaNum 32 | quote }}
+          database: laravel
+          username: laravel
+          password: pass
+        primary:
+          revisionHistoryLimit: 1
+          persistence:
+            size: 6Gi
+        secondary:
+          replicaCount: 3
+          revisionHistoryLimit: 1
+          persistence:
+            size: 6Gi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: youtubegaminglive
+  syncPolicy:
+    automated:
+      selfHeal: false
+      prune: true
