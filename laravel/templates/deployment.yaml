@@ -125,6 +125,26 @@ spec:
             secretKeyRef:
               name: soketi
               key: PUSHER_APP_SECRET
+        - name: YOUTUBE_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: laravel
+              key: YOUTUBE_KEY_ID
+        - name: YOUTUBE_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: laravel
+              key: YOUTUBE_CLIENT_ID
+        - name: YOUTUBE_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: laravel
+              key: YOUTUBE_CLIENT_SECRET
+        - name: YOUTUBE_REDIRECT_URI
+          valueFrom:
+            secretKeyRef:
+              name: laravel
+              key: YOUTUBE_REDIRECT_URI
         ports:
         - name: laravel-nginx
           containerPort: 80
