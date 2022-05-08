@@ -1,6 +1,6 @@
 
 image:
   name: ghcr.io/andreitelteu/youtubegaminglive-crawler
-  tag: '1650581025'
+  tag: '1652032689'
 
 replicas: 1

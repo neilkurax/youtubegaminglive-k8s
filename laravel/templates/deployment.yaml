@@ -60,7 +60,7 @@ spec:
         - name: LOG_CHANNEL
           value: "stderr"
         - name: DB_HOST
-          value: "percona-db-pxc.youtubegaminglive.svc.cluster.local"
+          value: "mariadb.youtubegaminglive.svc.cluster.local"
         - name: DB_DATABASE
           value: "laravel"
         - name: DB_USERNAME
