@@ -16,6 +16,8 @@ spec:
         nameOverride: redis
         global:
           storageClass: local-path
+          redis:
+            password: "Mjasb0Sv01"
         commonLabels:
           app: redis
         persistence:
