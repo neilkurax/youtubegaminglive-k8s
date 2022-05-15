@@ -38,6 +38,9 @@ spec:
       parameters:
         - name: tag
           value: "{{`{{ workflow.parameters.tag }}`}}"
+    retryStrategy:
+      retryPolicy: "Always"
+      limit: "3"
     script:
       image: alpine/git:latest
       command: [sh]
@@ -71,4 +74,4 @@ spec:
       secret:
         secretName: github-token
   podGC:
-    strategy: OnPodCompletion
+    strategy: OnPodSuccess

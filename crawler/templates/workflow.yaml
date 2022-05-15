@@ -71,4 +71,4 @@ spec:
       secret:
         secretName: github-token
   podGC:
-    strategy: OnPodCompletion
+    strategy: OnPodSuccess

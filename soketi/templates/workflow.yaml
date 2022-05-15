@@ -35,4 +35,4 @@ spec:
           - key: .dockerconfigjson
             path: config.json
   podGC:
-    strategy: OnPodCompletion
+    strategy: OnPodSuccess
