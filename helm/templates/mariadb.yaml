@@ -16,10 +16,11 @@ spec:
         nameOverride: "mariadb"
         fullnameOverride: "mariadb"
         auth:
-          rootPassword: {{ randAlphaNum 32 | quote }}
+          existingSecret: mariadb-secrets
           database: laravel
           username: laravel
           password: pass
+          forcePassword: true
         primary:
           revisionHistoryLimit: 1
           persistence:
@@ -36,3 +37,23 @@ spec:
     automated:
       selfHeal: false
       prune: true
+
+---
+
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: mariadb-secrets
+  namespace: youtubegaminglive
+spec:
+  encryptedData:
+    mariadb-password: AgBKg5UL/ZDcX2yIDFqW3KbMw23AVFhvgHj9tvfYEo3LWOMQETvQkkDjcRayiUS9nQxR0bVb3dLivzmx5aku5kiFfLJLLDKXR0wsB5uQ/f0m+5M+XBqIIgtvCRzpRrZ01efIaRW/AmdSIhRkIMgDHJY6aZWJ+Du9vVpgneKNwR4Fk+srcGGAQGTGdV5vuol6QjYN84ZZxSzd9kCTRboXpwFm5dps0sF0LDKB2YpuIgcMzZOilqAE/Yd4+Fz3SZw9vRhuGIRCOOJ7PpfSff+on62OHZO8fjB4imglMC+9PvsXu1Uvva+mLWl3SQAsESkjaEjYE8HjXIYwVe9skD2jo1679N+6F/VLBi8PtqDU4ccfL9H5xO30m8nXChiYGn06m3KZRwrIhNwNIdY96ePZRoyu9HlvsNedvv/ctyhtqKqG0+SxNkKAhjRBRL/s2ytdU9+0nG2SKWNmdPMHugLIRPT/RPOThTgL9pZQYad+p8qA+GpOddXbAbOT/0VMtVxAcnIN5ZC6urLxDIEB98UGQ5kkQprax3fYnDB5YhsOiuJPu/8Q7ZJYp8yj/rAMHT6wxrt/ve6xV+tlF4dGfJhmlTxkg5n0J4VH87lGrro9HgnQQ8Ku1e0QRnwN4wp4WlD7w3hMVILbokgitrMvAOXCzEPo6nuXvvfugA5CA8EbszfDpPC8BJlf7VCJC23YkhSy++MmCe3j
+    mariadb-replication-password: AgBzKtCqSCwunpnjpYF0a/A3LZfmDgze3GV3UjBMq8KP1Zi/myq+kIZr6/AyyjBZy5IpCXpx1kuKhfOsWG1TwznWMppB4ymqWVWIi7cwzjwWzT55kEeR591C/Irg9MjMq7l2elnQlXvQSP60k28DVEU538SEXRutn+6qvo8CmlFUXNrKeNXti6xjtEAr/mYMHxABWncZy3SNO+2Z6XAMmspcvtHWpdOv+Db8AhMREOXawDd4NwudgRS8h3xNgUri5R9wMMB3eHGNbqC1pHGANa3ludNUfCP3zebubJUYziQc3TJ3DHLlEm1kg7/qf3+b16pHzvGDUGUndcLAv3DEvJzVs1CRQ+1ct1hzQAuoPdcnRtAiQcm4Cbt/25yjvhxeT7KNAss4og9eH0Nr7HA94/LlSB+/wK+O6n9pPWxRe88KHyPLNIsvwoWNnLZv6p8MaEvKy4k6kAKLKooWVvI10MV7NluxbnGQyRPOO1/swzSreoZx+tk+pvRHUNkGc+q3iknFpIm65Afg00jLGNd/ft3XS0LsiY0mvDp/dQN3o2AhZ7YUc1BNMX6dlppXBbLUZ2BmwjfLTDJL/q4LvnT994K3FYrXVVmk6Sps5jevTAPvOys5LO7d8YkQOSZIi8AZoy0Cgp1prfP0Vz/ApasD11aQSZ03mRSENBIopANxnespvgVUaRvOvbMWjdxNJuXo/RxkjfUw+scW32AxTmdcOglll3paB1tGkJnaja+mPwpWnw==
+    mariadb-root-password: AgCSv0G2LWvLaDeQhhlfqL9CY9zYujhFCf5sTChcG+IUtiP784QEGly2635E7M0p/KNugUbd6b5eEW5rWwALbH80gh6ZHX2NLCfK1SmbLqjTCXNo3v/+kuSRavkADzhpqnhwjRkjksaEDkNiR58aHL96ihLiCFuY2gwmAFqJjvzkYE1omMsKakF/8kERxv1X1CwZwgUYOA7UGIKuAzB3+Uc1NFiFu8wEDi0jq/OtNuO/5Ya7F2+U2zmbhgkc9HXZNTSeHT089Kirtoosg07lNynrF8/cFG1BMkriDwCRtBAiccrweZ9zbBh897bDHjby1tIj+MrTUylnTZXsyKInQb+KEXzPczE31OVryx+hE71uFPdm/YiqDv1aaj0c5ZaB78Iem+P8eYctysWeTGqp3c8Fn6Ho05FQAxyXXUSd4E5USSyS0HO18NbzZBc50UEDDg0lhI+uf7nxhDvMSnryf+iCQXAJALYdLP6mIHY/U9Ot5yO1H14CmUBVdnnW+iiwo7znkiGqQNx///UQQFtvTg/5O/Z1n2nVodK6auLWg1b1pXKs+CDKT26De4JA2cSOXCPqlgNOOQsO/ewX620vSL5DGv0lwRAfd1jpzpjAfrJrJKMebeTAuTOU8uLjhpccJXjeupeWdAbhsGzZupn+GqzkgMWNfuNX6sBDXPybSme8gZ/AfuTMudF3rCl0WuuyR9y3Qbwl5eL5vc3Z+TAeJJhoBdUgKNkXqJlgrgF2xjWkJA==
+  template:
+    data: null
+    metadata:
+      creationTimestamp: null
+      name: mariadb-secrets
+      namespace: youtubegaminglive

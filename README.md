@@ -14,7 +14,18 @@ kubectl -n youtubegaminglive \
   --output yaml | kubeseal -o yaml | tee soketi/templates/secrets.yaml
 ```
 
+Secret for mariadb passwords:
+```bash
+kubectl -n youtubegaminglive \
+  create secret generic mariadb-secrets \
+  --dry-run=client \
+  --from-literal mariadb-password="secret" \
+  --from-literal mariadb-root-password="supersecret" \
+  --from-literal mariadb-replication-password="supersupersecret" \
+  --output yaml | kubeseal -o yaml
+```
 
+Secret for laravel:
 ```bash
 kubectl -n youtubegaminglive \
   create secret generic laravel \
