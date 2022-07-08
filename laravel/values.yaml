@@ -1,6 +1,6 @@
 
 image:
   name: ghcr.io/andreitelteu/youtubegaminglive-laravel
-  tag: '1652027088'
+  tag: '1657319081'
 
 replicas: 1
