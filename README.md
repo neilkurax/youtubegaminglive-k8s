@@ -61,3 +61,8 @@ kubectl -n youtubegaminglive \
   --from-literal INTERNAL_API_SIG="random" \
   --output yaml | kubeseal -o yaml | tee crawler/templates/secrets.yaml
 ```
+
+
+
+kubectl apply -f https://github.com/bitnami-labs/sealed-secrets/releases/download/$VERSION/controller.yaml
+

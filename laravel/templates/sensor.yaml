@@ -1,4 +1,4 @@
-apiVersion: argoproj.io/v1alpha1
+apiVersion: v1
 kind: Sensor
 metadata:
   name: laravel-webhook
@@ -28,7 +28,7 @@ spec:
               dest: spec.arguments.parameters.0.value
           source:
             resource:
-              apiVersion: argoproj.io/v1alpha1
+              apiVersion: v1
               kind: Workflow
               metadata:
                 generateName: laravel-pipeline-
