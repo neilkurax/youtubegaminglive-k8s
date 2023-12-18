@@ -1,44 +1,7 @@
 apiVersion: v1
-kind: Sensor
+kind: Secret
 metadata:
-  name: laravel-webhook
-  namespace: argo-events
-spec:
-  template:
-    serviceAccountName: operate-workflow-sa
-  dependencies:
-    - name: event-sensor
-      eventSourceName: youtubegaminglive-webhooks
-      eventName: laravel-webhook
-      filters:
-        data:
-          - path: body.ref
-            type: string
-            value:
-              - "refs/heads/main"
-  triggers:
-    - template:
-        name: webhook-workflow-trigger
-        k8s:
-          operation: create
-          parameters:
-            - src:
-                dependencyName: event-sensor
-                dataKey: body.repository.pushed_at
-              dest: spec.arguments.parameters.0.value
-          source:
-            resource:
-              apiVersion: v1
-              kind: Workflow
-              metadata:
-                generateName: laravel-pipeline-
-              spec:
-                workflowTemplateRef:
-                  name: laravel-pipeline
-                entrypoint: release
-                arguments:
-                  parameters:
-                  - name: tag
-                    value: '1.0.0'
-                # podGC:
-                #   strategy: OnPodCompletion
+  name: mysecret
+  namespace: mynamespace
+data:
+  foo: YmFy  # <- base64 encoded "bar"
